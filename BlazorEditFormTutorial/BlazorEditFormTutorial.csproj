@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>5b70ad69-3375-4c14-aa5f-bdab4a282b94</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
+    <PackageReference Include="MudBlazor" Version="6.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\Character.cs" />
+    <Compile Remove="Models\Difficulty.cs" />
+    <Compile Remove="Models\Team.cs" />
+    <Compile Remove="Pages\Characters.razor.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\FetchData.razor" />
+    <Content Remove="Pages\Counter.razor" />
+    <Content Remove="Pages\Characters.razor" />
+  </ItemGroup>
+
+</Project>

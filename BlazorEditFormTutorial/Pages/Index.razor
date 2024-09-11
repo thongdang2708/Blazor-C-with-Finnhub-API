@@ -1,0 +1,83 @@
+﻿@page "/"
+
+
+@using System.Net.Http.Json
+@inject HttpClient httpClient;
+@using System.ComponentModel.DataAnnotations
+@inject IConfiguration Configuration
+
+<div>
+    <EditForm FormName="Search" Model="_searchInput" OnSubmit="_handleSubmit">
+        <div>
+            <MudTextField T="string" @bind-Value="_searchInput.searchString" Label="Search" HelperTextOnFocus="true" Variant="Variant.Text"/>
+
+            <div class="mx-auto my-6">
+                <MudButton Variant="Variant.Filled" DropShadow="false" Color="Color.Primary" ButtonType="ButtonType.Submit"> Submit </MudButton>
+            </div>
+        </div>
+    </EditForm>
+    
+    @if (_submitted)
+    {
+        <p> Hello @_getInput from the other side! </p>
+    }
+
+    @if (_stockInfos.Count() == 0)
+    {
+    <p class="fw-bold text-xl-center text-black-50"> No Results </p>
+    }
+    else
+    {
+        <MudDataGrid T="StockInfo"
+                     Items="@_stockInfos"
+                     Class="mb-8"
+                     Filterable="true"
+                     Sortable="true"
+                     Hideable="true"
+                     MultiSelection="true"
+                     EditMode="DataGridEditMode.Cell"
+        >
+            <Columns >
+                <Column T="StockInfo" Field="Description" Title="Description" ShowColumnOptions="true" IsEditable="true" Groupable="true" Filterable="true"/>
+                <Column T="StockInfo" Field="Symbol" Title="Symbol" ShowColumnOptions="true" IsEditable="true" Groupable="true" Filterable="true"/>
+                <Column T="StockInfo" Field="Type" Title="Type" ShowColumnOptions="true" IsEditable="true" Groupable="true" Filterable="true"/>
+                <Column T="StockInfo" Field="DisplaySymbol" Title="Display Symbol" ShowColumnOptions="true" IsEditable="true" Groupable="true" Filterable="true"/>
+            </Columns>
+
+        </MudDataGrid>
+
+    }
+    
+</div>
+
+@code {
+
+    private SearchInput _searchInput = new();
+    private bool _submitted = false;
+    private string? _getInput = string.Empty;
+    IEnumerable<StockInfo> _stockInfos = new List<StockInfo>();
+
+    public async Task _handleSubmit(EditContext editContext)
+    {
+        _submitted = true;
+        _getInput = _searchInput.searchString;
+        _searchInput.searchString = string.Empty;
+ 
+        try
+        {   
+            var apiKey = "YOUR_API_KEY";
+            var query = $"https://finnhub.io/api/v1/search?q={_getInput}&token={apiKey}";
+            var response = await httpClient.GetFromJsonAsync<FinnhubAPI>(query);
+            _stockInfos = response? .result;
+        }
+      
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            _submitted = false;
+        }
+    }
+    
+   
+}
+
